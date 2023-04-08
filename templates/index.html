@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Point Picker</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('send_static_file', filename='style.css') }}">
+    <style>
+        #image-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        #clickable-image {
+            cursor: crosshair;
+        }
+    </style>
+</head>
+<body>
+    <div id="image-container" class="mt-4">
+        {% if session['uploaded_image'] %}
+            <img class="resized-image" id="clickable-image" src="{{ url_for('uploaded_file', filename=session['uploaded_image']) }}" alt="Image" />
+        {% else %}
+            <img class="resized-image" id="clickable-image" src="../static/1.jpg" alt="Image" />
+        {% endif %}
+    </div>
+
+    <button id="clear-points" type="button" class="btn btn-secondary mt-3">Clear Points</button>
+    <button id="process-points" type="button" class="btn btn-primary mt-3">Process Points</button>
+    <div id="output-image-container" class="mt-4"></div>
+
+
+        <!-- Add this code right after the opening <body> tag -->
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="image">Upload your image:</label>
+            <input type="file" class="form-control-file" id="image" name="image" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+
+    <!-- jQuery and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var points = [];
+    
+            $('#clickable-image').on('click', function(event) {
+                var img = $(this);
+                var offset = img.offset();
+                var x = event.pageX - offset.left;
+                var y = event.pageY - offset.top;
+                points.push({x: x, y: y});
+    
+                var point = $('<div class="point"></div>');
+                point.css({
+                    left: x + 'px',
+                    top: y + 'px',
+                });
+                $('#image-container').append(point);
+    
+                console.log('Clicked at', x, y);
+                console.log('Current points:', points);
+            });
+    
+            // Clear all points
+            $('#clear-points').on('click', function() {
+                points = [];
+                $('.point').remove();
+                console.log('Cleared all points');
+            });
+    
+            // Process points and image
+            $('#process-points').on('click', function() {
+                // 在这里处理点和图片
+                // ...
+    
+                console.log('Processing points and image');
+            });
+    
+            function displayProcessedImg(src) {
+                var outputImg = $('<img>').attr('src', src);
+                $('#output-image-container').empty().append(outputImg);
+            }
+
+            // 修改 sendPoints 函数以处理服务器响应
+            function sendPoints() {
+                $.ajax({
+                    type: 'POST',
+                    url: '/process_points',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ points: points }),
+                    success: function (response) {
+                        console.log('Points sent to server:', response);
+                        displayProcessedImg(response.output_image_path);
+                    },
+                    error: function (error) {
+                        console.error('Error sending points:', error);
+                    },
+                });
+            }
+
+            $('#process-points').on('click', function () {
+                sendPoints();
+            });
+
+        });
+    </script>
+    
+</body>
+</html>
