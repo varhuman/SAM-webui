@@ -41,7 +41,8 @@ $(document).ready(function () {
     });
 
     function displayProcessedImg(imagePath: string = '') {
-        const src = '/processed_image/' + imagePath;
+        const randomParam = '?rand=' + Math.random();
+        const src = '/processed_image/' + imagePath + randomParam;
         console.log("imagePath:", src);
         // 添加处理后的图像
         const imgElement = $('<img class="resized-image" id="output-image" src="' + src + '" alt="Output image" />');
@@ -52,6 +53,7 @@ $(document).ready(function () {
         });
         $('#output-image-container').empty().append(imgElement);
     }
+    
 
     function getDisplayedImageSize(image: HTMLImageElement) {
         return {
