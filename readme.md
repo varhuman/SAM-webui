@@ -6,7 +6,8 @@
 
 1. **创建本地虚拟环境并安装所需库：**
 
-    - Windows：直接运行 `setup.bat`
+    - Windows：在**开启管理员**命令行的情况下直接运行 `setup.bat`
+    > ⚠️ 注意：windows会直接在bat中安装pytorch2.0 + cu118,如果你的显卡不支持请自行更换版本或者选择 +cpu版本而并非cuda
     - macOS / Unix：
         ```bash
         chmod +x setup.sh
