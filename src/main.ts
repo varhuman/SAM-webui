@@ -27,8 +27,14 @@ $(document).ready(function () {
         $('#upload-form').submit();
     });
 
-    // Show loading indicator when processing points
-    $('#process-points').on('click', function () {
+    $("#process-points").on("click", function () {
+        const points = getPoints();
+        if (points.length === 0) {
+          $("#no-points-warning").show();
+          return;
+        } else {
+          $("#no-points-warning").hide();
+        }
         $('#loading').show();
         sendPoints();
     });
@@ -39,6 +45,10 @@ $(document).ready(function () {
         $('.point').remove();
         console.log('Cleared all points');
     });
+
+    function getPoints() {
+        return points;
+      }
 
     function displayProcessedImg(imagePath: string = '', originalWidth: number, originalHeight: number) {
         const randomParam = '?rand=' + Math.random();
