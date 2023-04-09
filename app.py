@@ -91,7 +91,11 @@ def process_points():
     utils.check_folder(save_path)
     output_image_path, mask_image_path = process_image(image_path, mask_utils, input_point, input_label, save_path)
 
+    # / use in unix, \ use in windows, it's so annoying
+    output_image_path = output_image_path.replace('\\', '/')
+    
     output_image_path = output_image_path.split('output/')[1]
+
     
     return jsonify({
         'output_image_path': output_image_path,
