@@ -1,6 +1,7 @@
 import sys
 from pathlib import Path
-
+import os
+import uuid
 sys.path.append(str(Path(__file__).parent.parent))
 
 from flask import Flask, render_template, request, redirect, url_for, send_from_directory,jsonify, session
@@ -9,10 +10,10 @@ from modules.image_processing import init_sam_model, process_image
 import numpy as np
 import modules.utils as utils
 from werkzeug.utils import secure_filename
-import os
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'
+#SECRET_KEY ensure every time run it, it's clean and new data
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or str(uuid.uuid4())
 mask_utils = init_sam_model()
 
 @app.route('/')

@@ -11,7 +11,7 @@ call env\Scripts\activate.bat
 
 echo Installing Python dependencies
 pip install git+https://github.com/facebookresearch/segment-anything.git
-pip install opencv-python pycocotools matplotlib onnxruntime onnx gradio
+pip install opencv-python pycocotools matplotlib onnxruntime onnx gradio flask werkzeug torch torchvision torchaudio
 
 echo Installing Node.js dependencies
 npm install -g typescript
