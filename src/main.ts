@@ -3,24 +3,27 @@ $(document).ready(function () {
     let img = document.getElementById('clickable-image') as HTMLImageElement;
     $('#clickable-image').on('click', function (event) {
         const img = $(this);
-        const offset = img.offset();
-
-        if (offset) {
-            const x = event.pageX - offset.left;
-            const y = event.pageY - offset.top;
-            points.push({ x: x, y: y });
-
-            const point = $('<div class="point"></div>');
-            point.css({
-                left: x + 'px',
-                top: y + 'px',
-            });
-            $('#image-container').append(point);
-
-            console.log('Clicked at', x, y);
-            console.log('Current points:', points);
+    
+        const x = event.offsetX;
+        const y = event.offsetY;
+    
+        // 确保点击点在图片范围内
+        if (x < 0 || x > img.width()! || y < 0 || y > img.height()!) {
+            return;
         }
-    });
+    
+        points.push({ x: x, y: y });
+    
+        const point = $('<div class="point"></div>');
+        point.css({
+            left: x + 'px',
+            top: y + 'px',
+        });
+        $('#image-container').append(point);
+    
+        console.log('Clicked at', x, y);
+        console.log('Current points:', points);
+    });    
 
     // Automatically submit the form when a file is selected
     $('#image').on('change', function () {
@@ -78,8 +81,6 @@ $(document).ready(function () {
         });
         $('#output-image-container').empty().append(imgElement);
     }
-    
-    
 
     function getDisplayedImageSize(image: HTMLImageElement) {
         return {
