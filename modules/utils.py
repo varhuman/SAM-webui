@@ -22,6 +22,27 @@ def get_image_size(image_path):
     res['height'] = height
     return res
 
-def check_floder(path):
+def check_folder(path):
     if not os.path.exists(path):
         os.makedirs(path)
+
+def get_new_path_if_exist(path, is_file = False, count = 1):
+    if not os.path.exists(path):
+        return path
+    if is_file:
+        path = path.split('.')
+        if count > 1:
+            suffix_count = len(path[0].split('_'))
+            path[0] = path[0][:-suffix_count]
+        path[0] = path[0] + f'_{count}'
+        path = '.'.join(path)
+        return get_new_path_if_exist(path, is_file, count + 1)
+    else:
+        if os.path.exists(path):
+            if count > 1:
+                suffix_count = len(path.split('_'))
+                path = path[:-suffix_count]
+            path = path + f'_{count}'
+            return get_new_path_if_exist(path, is_file, count + 1)
+
+

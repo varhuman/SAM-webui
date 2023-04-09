@@ -44,7 +44,7 @@ def process_image(image_path):
     file_name = os.path.splitext(os.path.basename(image_path))[0]
     # 创建 output 文件夹（如果不存在）
     image_folder = os.path.join(OutPutFolder, file_name)
-    utils.check_floder(image_folder)
+    utils.check_folder(image_folder)
 
     # 获取当前时间戳
     start_time = time.time()
@@ -65,7 +65,7 @@ def process_image(image_path):
     # 遍历每个掩码并将其保存为图像
     for i, mask in enumerate(masks):
         output_slice_folder = os.path.join(image_folder, f"{file_name}")
-        utils.check_floder(output_slice_folder)
+        utils.check_folder(output_slice_folder)
         path = os.path.join(output_slice_folder, f"{file_name}_mask_{i}.png")
         colored_mask, _ = mask_utils.save_mask_to_path(image, mask, path)
         # 将彩色掩码与结果图像融合
@@ -90,7 +90,7 @@ def main():
     image_files = []
 
     # 创建 output 文件夹（如果不存在）
-    utils.check_floder(OutPutFolder)
+    utils.check_folder(OutPutFolder)
 
     for ext in ('*.jpg', '*.JPG', '*.png', '*.PNG'):
         image_files.extend(glob.glob(os.path.join(input_folder, ext)))

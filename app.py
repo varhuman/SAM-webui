@@ -51,7 +51,7 @@ def upload_file():
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        utils.check_floder(app.config['UPLOAD_FOLDER'])
+        utils.check_folder(app.config['UPLOAD_FOLDER'])
         file.save(path)
         session['uploaded_image'] = filename
         return redirect(url_for('index'))
@@ -87,7 +87,8 @@ def process_points():
 
     file_name = session['uploaded_image'].split('.')[0]
     save_path = os.path.join(app.config['OUTPUT_FOLDER'], file_name)
-    utils.check_floder(save_path)
+    save_path = utils.get_new_path_if_exist(save_path)
+    utils.check_folder(save_path)
     output_image_path, mask_image_path = process_image(image_path, mask_utils, input_point, input_label, save_path)
 
     output_image_path = output_image_path.split('output/')[1]

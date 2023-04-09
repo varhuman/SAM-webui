@@ -4,6 +4,7 @@ from segment_anything import sam_model_registry, SamAutomaticMaskGenerator, SamP
 import os
 import cv2
 from PIL import Image
+import modules.utils as utils
 
 class MaskUtils:
     def __init__(self, predictor):
@@ -134,9 +135,11 @@ class MaskUtils:
 
         if save_path:
             output_path = os.path.join(save_path, f"output.png")
+            output_path = utils.get_new_path_if_exist(output_path, True)
             cv2.imwrite(output_path, cv2.cvtColor(blended_image, cv2.COLOR_RGB2BGR))
 
             mask_path = os.path.join(save_path, f"mask.png")
+            mask_path = utils.get_new_path_if_exist(mask_path, True)
             cv2.imwrite(mask_path, cv2.cvtColor(black_image, cv2.COLOR_RGB2BGR))
             return output_path, mask_path
         else:

@@ -40,19 +40,35 @@ $(document).ready(function () {
         console.log('Cleared all points');
     });
 
-    function displayProcessedImg(imagePath: string = '') {
+    function displayProcessedImg(imagePath: string = '', originalWidth: number, originalHeight: number) {
         const randomParam = '?rand=' + Math.random();
         const src = '/processed_image/' + imagePath + randomParam;
         console.log("imagePath:", src);
+    
+        // 计算处理后的图像的宽度和高度，以保持宽高比
+        const containerWidth = $('#output-image-container').width()!;
+        const containerHeight = $('#output-image-container').height()!;
+        const aspectRatio = originalWidth / originalHeight;
+        let width, height;
+    
+        if (containerWidth / containerHeight > aspectRatio) {
+            width = containerHeight * aspectRatio;
+            height = containerHeight;
+        } else {
+            width = containerWidth;
+            height = containerWidth / aspectRatio;
+        }
+    
         // 添加处理后的图像
         const imgElement = $('<img class="resized-image" id="output-image" src="' + src + '" alt="Output image" />');
         imgElement.css({
-            "width": "100%",
-            "height": "100%",
+            "width": width,
+            "height": height,
             "object-fit": "contain",
         });
         $('#output-image-container').empty().append(imgElement);
     }
+    
     
 
     function getDisplayedImageSize(image: HTMLImageElement) {
@@ -79,7 +95,7 @@ $(document).ready(function () {
             }),
             success: function (response) {
                 console.log('Points sent to server:', response);
-                displayProcessedImg(response.output_image_path);
+                displayProcessedImg(response.output_image_path, img.naturalWidth, img.naturalHeight);
                 $('#loading').hide();
                 $('#download-mask').show().attr('data-mask-url', response.mask_image_path);
             },
